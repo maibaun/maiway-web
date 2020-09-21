@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import "./App.css";
 import AppRouter from "./AppRouter";
 import { authSvc } from "../fBase";
@@ -8,7 +8,7 @@ import { rootState } from "../store";
 
 interface AppProps {
   isLoggedIn: loginProps;
-  setLoginnedIn: any;
+  setLoginnedIn: (data: boolean) => void;
 }
 
 function App({ isLoggedIn, setLoginnedIn }: AppProps) {
@@ -35,6 +35,6 @@ function mapStateToProps(state: rootState) {
 }
 
 function mapDispatchToProps(dispatch: any) {
-  return { setLoginnedIn: (data: any) => dispatch(setLoginnedIn(data)) };
+  return { setLoginnedIn: (data: boolean) => dispatch(setLoginnedIn(data)) };
 }
 export default connect(mapStateToProps, mapDispatchToProps)(App);

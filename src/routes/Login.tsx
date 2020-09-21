@@ -1,33 +1,46 @@
 import React, { useState } from "react";
-import { authSvc } from "../fBase";
+import { authSvc, firebaseInstance } from "../fBase";
 
 const Login = () => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [newAccount, setNewAccount] = useState(true);
+  // const [newAccount, setNewAccount] = useState(true);
+  const [inputs, setInputs] = useState({ email: "", password: "" });
+  const { email, password } = inputs;
+
   const onChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const {
       target: { name, value },
     } = event;
-    if (name === "email") {
-      setEmail(value);
-    } else if (name === "password") {
-      setPassword(value);
-    }
+    setInputs((prevState) => ({ ...prevState, [name]: value }));
   };
+
   const onSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     try {
       let data;
-      if (newAccount) {
-        data = await authSvc.createUserWithEmailAndPassword(email, password);
-      } else {
-        data = await authSvc.signInWithEmailAndPassword(email, password);
-      }
+      // if (newAccount) {
+      //   data = await authSvc.createUserWithEmailAndPassword(email, password);
+      // } else {
+      data = await authSvc.signInWithEmailAndPassword(email, password);
+      // }
       console.log(data);
     } catch (error) {
       console.log(error);
     }
+  };
+
+  const onSocialClick = async (
+    event: React.MouseEvent<HTMLButtonElement, MouseEvent>
+  ) => {
+    const target = event.target as HTMLButtonElement;
+    const { name } = target;
+
+    let provider: any;
+    if (name === "google") {
+      provider = new firebaseInstance.auth.GoogleAuthProvider();
+    } else if (name === "github") {
+    }
+    const data = await authSvc.signInWithPopup(provider);
+    console.log(data);
   };
   return (
     <div>
@@ -48,11 +61,15 @@ const Login = () => {
           value={password}
           onChange={onChange}
         />
-        <input type="submit" value={newAccount ? "Create Account" : "Log In"} />
+        <input type="submit" value="Log In" />
       </form>
       <div>
-        <button>Continue with Google</button>
-        <button>Continue with Github</button>
+        <button name="google" onClick={onSocialClick}>
+          Continue with Google
+        </button>
+        <button name="github" onClick={onSocialClick}>
+          Continue with Github
+        </button>
       </div>
     </div>
   );
