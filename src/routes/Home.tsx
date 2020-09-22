@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { connect } from "react-redux";
+import Nweet from "../components/Nweet";
 import { dbSvc } from "../fBase";
 import { rootState } from "../store";
 import { loginProps } from "../store/loginReducer";
@@ -7,14 +8,16 @@ import { loginProps } from "../store/loginReducer";
 interface HomeProps {
   userObj: loginProps;
 }
-interface NweetProps {
+export interface NweetProps {
   text: string;
   id: string;
+  creatorId: string;
 }
 const Home = ({ userObj }: HomeProps) => {
   const [nweet, setNweet] = useState("");
   const [nweets, setNweets] = useState<NweetProps[]>([]);
 
+  // 일반조회
   // const getNweets = async () => {
   //   const dbNweets = await dbSvc.collection("nweets").get();
   //   dbNweets.forEach((document) => {
@@ -30,11 +33,13 @@ const Home = ({ userObj }: HomeProps) => {
   //   getNweets();
   // }, []);
 
+  // 실시간 자동 조회
   useEffect(() => {
     dbSvc.collection("nweets").onSnapshot((snapshot) => {
       const nweetArray: any = snapshot.docs.map((doc) => ({
         id: doc.id,
         ...doc.data(),
+        creatorId: userObj.uid,
       }));
       setNweets(nweetArray);
     });
@@ -66,9 +71,11 @@ const Home = ({ userObj }: HomeProps) => {
       </form>
       <div>
         {nweets.map((nweet) => (
-          <div key={nweet.id}>
-            <h4>{nweet.text}</h4>
-          </div>
+          <Nweet
+            key={nweet.id}
+            nweetObj={nweet}
+            isOwner={nweet.creatorId === userObj.uid}
+          />
         ))}
       </div>
     </div>
