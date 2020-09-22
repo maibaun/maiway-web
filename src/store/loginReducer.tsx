@@ -1,6 +1,6 @@
 const IS_LOGGENIN = "IS_LOGGENID" as const;
 
-export type loginProps = boolean | null;
+export type loginProps = any | null;
 
 const isLoginnendAction = (data: loginProps) => ({
   type: IS_LOGGENIN,
@@ -9,7 +9,7 @@ const isLoginnendAction = (data: loginProps) => ({
 
 type actionType = ReturnType<typeof isLoginnendAction>;
 // action
-export const setLoginnedIn = (data: loginProps) => {
+export const setLoginUserObj = (data: loginProps) => {
   return isLoginnendAction(data);
 };
 

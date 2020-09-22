@@ -2,9 +2,10 @@ import React, { useState } from "react";
 import { authSvc, firebaseInstance } from "../fBase";
 
 const Login = () => {
-  // const [newAccount, setNewAccount] = useState(true);
+  const [newAccount, setNewAccount] = useState(true);
   const [inputs, setInputs] = useState({ email: "", password: "" });
   const { email, password } = inputs;
+  const [message, setMessage] = useState("");
 
   const onChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const {
@@ -17,16 +18,19 @@ const Login = () => {
     event.preventDefault();
     try {
       let data;
-      // if (newAccount) {
-      //   data = await authSvc.createUserWithEmailAndPassword(email, password);
-      // } else {
-      data = await authSvc.signInWithEmailAndPassword(email, password);
-      // }
-      console.log(data);
+      if (newAccount) {
+        data = await authSvc.createUserWithEmailAndPassword(email, password);
+      } else {
+        data = await authSvc.signInWithEmailAndPassword(email, password);
+      }
+      // console.log(data);
     } catch (error) {
-      console.log(error);
+      // console.log(error);
+      setMessage(error.message);
     }
   };
+
+  const onCreLogClick = () => setNewAccount((prevState) => !prevState);
 
   const onSocialClick = async (
     event: React.MouseEvent<HTMLButtonElement, MouseEvent>
@@ -42,6 +46,7 @@ const Login = () => {
     const data = await authSvc.signInWithPopup(provider);
     console.log(data);
   };
+
   return (
     <div>
       <form onSubmit={onSubmit}>
@@ -61,8 +66,12 @@ const Login = () => {
           value={password}
           onChange={onChange}
         />
-        <input type="submit" value="Log In" />
+        <input type="submit" value={newAccount ? "Create Account" : "Log In"} />
+        <span>{message}</span>
       </form>
+      <span onClick={onCreLogClick}>
+        {!newAccount ? "Create Account" : "Log In"}
+      </span>
       <div>
         <button name="google" onClick={onSocialClick}>
           Continue with Google
