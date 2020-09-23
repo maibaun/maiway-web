@@ -5,6 +5,8 @@ import Home from "../routes/Home";
 import Navigation from "../components/Navigation";
 import { loginProps } from "../store/loginReducer";
 import Profile from "../routes/Profile";
+import { connect } from "react-redux";
+import { rootState } from "../store";
 
 interface AppRouterProps {
   userObj: loginProps;
@@ -17,7 +19,7 @@ const AppRouter = ({ userObj }: AppRouterProps) => {
         {userObj ? (
           <>
             <Route exact path="/">
-              <Home userObj={userObj} />
+              <Home />
             </Route>
             <Route exact path="/profile">
               <Profile />
@@ -33,4 +35,8 @@ const AppRouter = ({ userObj }: AppRouterProps) => {
   );
 };
 
-export default AppRouter;
+function mapStateToProps(state: rootState) {
+  return { userObj: state.loginReducer };
+}
+
+export default connect(mapStateToProps)(AppRouter);

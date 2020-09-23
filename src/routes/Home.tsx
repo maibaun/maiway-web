@@ -82,4 +82,8 @@ const Home = ({ userObj }: HomeProps) => {
   );
 };
 
-export default Home;
+function mapStateToProps(state: rootState) {
+  return { userObj: state.loginReducer };
+}
+
+export default connect(mapStateToProps)(Home);

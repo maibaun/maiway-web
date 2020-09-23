@@ -24,7 +24,7 @@ function App({ userObj, setLoginUserObj }: AppProps) {
   }, []);
   return (
     <>
-      <AppRouter userObj={userObj} />
+      <AppRouter />
       <footer>&copy; Maiway {new Date().getFullYear()}</footer>
     </>
   );
