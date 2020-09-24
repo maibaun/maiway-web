@@ -10,8 +10,9 @@ import { rootState } from "../store";
 
 interface AppRouterProps {
   userObj: loginProps;
+  refreshUser: () => void;
 }
-const AppRouter = ({ userObj }: AppRouterProps) => {
+const AppRouter = ({ userObj, refreshUser }: AppRouterProps) => {
   return (
     <Router>
       {userObj && <Navigation />}
@@ -22,7 +23,7 @@ const AppRouter = ({ userObj }: AppRouterProps) => {
               <Home />
             </Route>
             <Route exact path="/profile">
-              <Profile />
+              <Profile refreshUser={refreshUser} />
             </Route>
           </>
         ) : (

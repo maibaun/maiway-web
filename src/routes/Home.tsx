@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { connect } from "react-redux";
+import Attachemnt from "../components/Attachemnt";
 import Nweet from "../components/Nweet";
 import { dbSvc } from "../fBase";
 import { rootState } from "../store";
@@ -39,7 +40,7 @@ const Home = ({ userObj }: HomeProps) => {
       const nweetArray: any = snapshot.docs.map((doc) => ({
         id: doc.id,
         ...doc.data(),
-        creatorId: userObj.uid,
+        creatorId: userObj?.uid,
       }));
       setNweets(nweetArray);
     });
@@ -74,10 +75,11 @@ const Home = ({ userObj }: HomeProps) => {
           <Nweet
             key={nweet.id}
             nweetObj={nweet}
-            isOwner={nweet.creatorId === userObj.uid}
+            isOwner={nweet.creatorId === userObj?.uid}
           />
         ))}
       </div>
+      <Attachemnt />
     </div>
   );
 };

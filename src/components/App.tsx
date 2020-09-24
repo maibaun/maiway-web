@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import "./App.css";
 import AppRouter from "./AppRouter";
 import { authSvc } from "../fBase";
@@ -13,18 +13,38 @@ interface AppProps {
 
 function App({ userObj, setLoginUserObj }: AppProps) {
   // setLoginnedIn(authSvc.currentUser);
+  const [init, setInit] = useState(false);
   useEffect(() => {
     authSvc.onAuthStateChanged((user: any) => {
       if (user) {
-        setLoginUserObj(user);
+        setLoginUserObj({
+          displayName: user.displayName,
+          uid: user.uid,
+          updateProfile: (args: any) => user.updateProfile(args),
+        });
       } else {
-        setLoginUserObj(null);
+        setLoginUserObj({
+          displayName: null,
+          uid: null,
+          updateProfile: null,
+        });
       }
+      setInit(true);
     });
   }, []);
+
+  const refreshUser = () => {
+    const user: any = authSvc.currentUser;
+    setLoginUserObj({
+      displayName: user.displayName,
+      uid: user.uid,
+      updateProfile: (args: any) => user.updateProfile(args),
+    });
+  };
+
   return (
     <>
-      <AppRouter />
+      {init ? <AppRouter refreshUser={refreshUser} /> : "Initializing..."}
       <footer>&copy; Maiway {new Date().getFullYear()}</footer>
     </>
   );
