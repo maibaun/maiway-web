@@ -15,16 +15,19 @@ interface AppRouterProps {
 const AppRouter = ({ userObj, refreshUser }: AppRouterProps) => {
   return (
     <Router>
-      {userObj && <Navigation />}
+      {/* {userObj.uid && <Navigation />} */}
       <Switch>
-        {userObj ? (
+        {userObj.uid ? (
           <>
+            <Route exact path="/:id">
+              <Home />
+            </Route>
             <Route exact path="/">
               <Home />
             </Route>
-            <Route exact path="/profile">
+            {/* <Route exact path="/profile">
               <Profile refreshUser={refreshUser} />
-            </Route>
+            </Route> */}
           </>
         ) : (
           <Route exact path="/">

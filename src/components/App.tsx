@@ -4,28 +4,29 @@ import AppRouter from "./AppRouter";
 import { authSvc } from "../fBase";
 import { connect } from "react-redux";
 import { loginProps, setLoginUserObj } from "../store/loginReducer";
-import { rootState } from "../store";
 
 interface AppProps {
-  userObj: loginProps;
   setLoginUserObj: (data: loginProps) => void;
 }
 
-function App({ userObj, setLoginUserObj }: AppProps) {
+function App({ setLoginUserObj }: AppProps) {
   // setLoginnedIn(authSvc.currentUser);
   const [init, setInit] = useState(false);
   useEffect(() => {
     authSvc.onAuthStateChanged((user: any) => {
+      // console.log(user);
       if (user) {
         setLoginUserObj({
           displayName: user.displayName,
           uid: user.uid,
+          photoURL: user.photoURL,
           updateProfile: (args: any) => user.updateProfile(args),
         });
       } else {
         setLoginUserObj({
           displayName: null,
           uid: null,
+          photoURL: null,
           updateProfile: null,
         });
       }
@@ -38,6 +39,7 @@ function App({ userObj, setLoginUserObj }: AppProps) {
     setLoginUserObj({
       displayName: user.displayName,
       uid: user.uid,
+      photoURL: user.photoURL,
       updateProfile: (args: any) => user.updateProfile(args),
     });
   };
@@ -45,13 +47,9 @@ function App({ userObj, setLoginUserObj }: AppProps) {
   return (
     <>
       {init ? <AppRouter refreshUser={refreshUser} /> : "Initializing..."}
-      <footer>&copy; Maiway {new Date().getFullYear()}</footer>
+      {/* <footer>&copy; Maiway {new Date().getFullYear()}</footer> */}
     </>
   );
-}
-
-function mapStateToProps(state: rootState) {
-  return { userObj: state.loginReducer };
 }
 
 function mapDispatchToProps(dispatch: any) {
@@ -59,4 +57,4 @@ function mapDispatchToProps(dispatch: any) {
     setLoginUserObj: (data: loginProps) => dispatch(setLoginUserObj(data)),
   };
 }
-export default connect(mapStateToProps, mapDispatchToProps)(App);
+export default connect(null, mapDispatchToProps)(App);

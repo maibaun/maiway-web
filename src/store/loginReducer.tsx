@@ -3,6 +3,7 @@ const IS_LOGGENIN = "IS_LOGGENID" as const;
 interface initProps {
   displayName: string | null;
   uid: string | null;
+  photoURL: string | null;
   updateProfile: any;
 }
 
@@ -22,6 +23,7 @@ export const setLoginUserObj = (data: loginProps) => {
 const initState: loginProps = {
   displayName: null,
   uid: null,
+  photoURL: null,
   updateProfile: null,
 };
 // reducer

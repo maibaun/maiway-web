@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import { dbSvc } from "../fBase";
-import { NweetProps } from "../routes/Home";
+import { dbSvc, storageSvc } from "../fBase";
+import { NweetProps } from "../routes/_Home";
 
 interface NweetsProps {
   nweetObj: NweetProps;
@@ -14,6 +14,9 @@ const Nweet = ({ nweetObj, isOwner }: NweetsProps) => {
     const ok = window.confirm("Are you sure you want to delete this nweet?");
     if (ok) {
       await dbSvc.collection("nweets").doc(`${nweetObj.id}`).delete();
+
+      nweetObj.attachmentUrl &&
+        (await storageSvc.refFromURL(nweetObj.attachmentUrl).delete());
     }
   };
 
