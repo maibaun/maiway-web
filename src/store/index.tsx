@@ -2,9 +2,13 @@ import { combineReducers, createStore, applyMiddleware } from "redux";
 import thunk from "redux-thunk";
 import { composeWithDevTools } from "redux-devtools-extension";
 import loginReducer from "./loginReducer";
+import fsCmmnArrayReducer from "./fsCmmnArrayReducer";
+import placesReducer from "./placesReducer";
 
 const rootReducer = combineReducers({
   loginReducer,
+  fsCmmnArrayReducer,
+  placesReducer,
 });
 
 const store = createStore(

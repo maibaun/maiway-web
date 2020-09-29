@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import Avatar from "@material-ui/core/Avatar";
 import Button from "@material-ui/core/Button";
 import CssBaseline from "@material-ui/core/CssBaseline";
@@ -13,8 +13,8 @@ import { makeStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
 import { Copyright } from "../components/commons";
 import { authSvc, firebaseInstance } from "../fBase";
-import Link from "@material-ui/core/Link";
-import GBtn from "../components/images/btn_google_signin_light_normal_web@2x.png";
+// import Link from "@material-ui/core/Link";
+// import GBtn from "../components/images/btn_google_signin_light_normal_web@2x.png";
 const useStyles = makeStyles((theme) => ({
   paper: {
     marginTop: theme.spacing(8),
@@ -38,7 +38,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function Login() {
+function Login({ callLoading }: any) {
   const classes = useStyles();
   // const [newAccount, setNewAccount] = useState(true);
   const [inputs, setInputs] = useState({
@@ -59,6 +59,7 @@ function Login() {
   const onSubmit = async () => {
     // event.preventDefault();
     try {
+      callLoading();
       let data;
       // if (newAccount) {
       // data = await authSvc.createUserWithEmailAndPassword(email, password);
@@ -67,6 +68,8 @@ function Login() {
       // }
     } catch (error) {
       setMessage(error.message);
+    } finally {
+      callLoading();
     }
   };
 

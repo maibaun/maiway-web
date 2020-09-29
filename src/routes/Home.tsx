@@ -33,6 +33,10 @@ import { rootState } from "../store";
 import { Copyright } from "../components/commons";
 import Dashboard from "../components/Dashboard";
 import { loginProps } from "../store/loginReducer";
+import Gallery from "../components/Gallery";
+import Chart from "../components/Chart";
+import Places from "../components/Places";
+import Create from "../components/Create";
 
 const drawerWidth = 240;
 
@@ -91,8 +95,9 @@ const useStyles = makeStyles((theme) => ({
 
 interface HomeProps {
   userObj: loginProps;
+  callLoading: () => void;
 }
-function Home({ userObj }: HomeProps) {
+function Home({ userObj, callLoading }: HomeProps) {
   const classes = useStyles();
   const history = useHistory();
   const [open, setOpen] = useState(true);
@@ -135,11 +140,11 @@ function Home({ userObj }: HomeProps) {
         <div className={classes.appBarSpacer} />
         <Container maxWidth="lg" className={classes.container}>
           {pathname === "/" && <Dashboard />}
-          {/* {pathname === "/create" && <Create />}
-          {pathname === "/tspots" && <Tspots />}
+          {pathname === "/create" && <Create />}
+          {pathname === "/places" && <Places callLoading={callLoading} />}
           {pathname === "/chart" && <Chart />}
           {pathname === "/gallery" && <Gallery />}
-          {pathname === "/settings" && <Settings />} */}
+          {/* {pathname === "/settings" && <Settings />} */}
 
           <Box pt={4}>
             <Copyright />

@@ -167,7 +167,11 @@ function HeaderBar({ open, handleDrawerOpen, userObj }: HeaderBarProps) {
         <IconButton onClick={handleClick}>
           <Avatar>
             {userObj.photoURL ? (
-              <img style={{ width: "100%" }} src={userObj.photoURL} />
+              <img
+                style={{ width: "100%" }}
+                src={userObj.photoURL}
+                alt="profile"
+              />
             ) : (
               <AccountCircle />
             )}
