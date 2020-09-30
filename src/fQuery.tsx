@@ -1,5 +1,27 @@
 import { dbSvc } from "./fBase";
 
+const FQcheckUser = async (uid: string) => {
+  try {
+    let rows: any = [];
+
+    const snapshot = await dbSvc
+      .collection("users")
+      .where("uid", "==", uid)
+      .get();
+
+    snapshot.forEach((doc) => {
+      const childData = doc.data();
+      rows.push({ ...childData });
+    });
+    return rows;
+    //   handleSearchResponse(res, rows);
+  } catch (err) {
+    console.log(err);
+    return [];
+    //   handleSearchResponse(res, null, error);
+  }
+};
+
 // const FQcommon = async (doc: string) => {
 //   try {
 //     let rows = [];
@@ -68,7 +90,7 @@ const FQcommonArray = async (params: FQcommonArrayProps[]) => {
 
 const FQsearchpage = async ({ col, where, startPage, maxPage }: any) => {
   try {
-    console.log(col, where, startPage, maxPage);
+    // console.log(col, where, startPage, maxPage);
     startPage = parseInt(startPage, 10);
     maxPage = parseInt(maxPage, 10);
     let rows: any = [];
@@ -119,4 +141,21 @@ const FQsearchpage = async ({ col, where, startPage, maxPage }: any) => {
   }
 };
 
-export { FQcommonArray, FQsearchpage };
+const FQupdate = async ({ col, doc, params }: any) => {
+  console.log(col, doc, params);
+  doc = doc.replace(/ /g, "");
+  try {
+    await dbSvc
+      .collection(col)
+      .doc(doc)
+      .set(
+        {
+          ...params,
+        },
+        { merge: true }
+      );
+  } catch (err) {
+    console.log(err);
+  }
+};
+export { FQcheckUser, FQcommonArray, FQsearchpage, FQupdate };

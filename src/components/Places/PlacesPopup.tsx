@@ -14,10 +14,11 @@ import {
   MenuItem,
 } from "@material-ui/core";
 
-import { saveRequest, updateRequest } from "../../store/fireStoreReducer";
+import { saveRequest, updateRequest } from "../../store/cudReducer";
 import { setUploadFile, resetUploadFile } from "../../store/fileUploadReducer";
 import { deleteMultiFile } from "../../store/fileDeleteReducer";
 import { CommonPopup, DraggableDialog, MapContainer2 } from "../commons";
+import { dbSvcProps } from "../../fBase";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -86,112 +87,97 @@ function PlacesPopup({
 }: any) {
   const classes = useStyles();
   const [inputs, setInputs] = useState({
-    name_ch: "",
-    name_en: "",
-    name_ja: "",
-    name_ko: "",
-    name_malaysia: "",
-    name_sp: "",
-    name_tamil: "",
-    name_thailand: "",
-
-    // category: "",
     address: "",
-    details_en: "",
-    details_es: "",
-    details_ja: "",
-    details_ko: "",
-    details_tl: "",
-    details_zh: "",
-    // type: "",
     latitude: "",
     longitude: "",
+    en_name: "",
+    fr_name: "",
+    jp_name: "",
+    kr_name: "",
+    ph_name: "",
+    cn_name: "",
+    tc_name: "",
+    en_descr: "",
+    fr_descr: "",
+    jp_descr: "",
+    kr_descr: "",
+    ph_descr: "",
+    cn_descr: "",
+    tc_descr: "",
   });
 
   const [openMap, setOpenMap] = useState(false);
   const [openDialog, setOpenDialog] = useState(false);
   const {
-    name_ch,
-    name_en,
-    name_ja,
-    name_ko,
-    name_malaysia,
-    name_sp,
-    name_tamil,
-    name_thailand,
-
-    // category,
     address,
-    details_en,
-    details_es,
-    details_ja,
-    details_ko,
-    details_tl,
-    details_zh,
-    // type,
     latitude,
     longitude,
+    en_name,
+    fr_name,
+    jp_name,
+    kr_name,
+    ph_name,
+    cn_name,
+    tc_name,
+    en_descr,
+    fr_descr,
+    jp_descr,
+    kr_descr,
+    ph_descr,
+    cn_descr,
+    tc_descr,
   } = inputs;
 
   const [country, setCountry] = useState("");
-  const [category, setCategory] = useState("");
-  const [type, setType] = useState("");
+  const [category, setCategory] = useState(0);
   const [latLng, setLatLng] = useState<any>({ lat: "", lng: "" });
 
   useEffect(() => {
     if (open && selectedRow) {
       setInputs({
-        name_ch: selectedRow.name_ch || "",
-        name_en: selectedRow.name_en || "",
-        name_ja: selectedRow.name_ja || "",
-        name_ko: selectedRow.name_ko || "",
-        name_malaysia: selectedRow.name_malaysia || "",
-        name_sp: selectedRow.name_sp || "",
-        name_tamil: selectedRow.name_tamil || "",
-        name_thailand: selectedRow.name_thailand || "",
-        // country: selectedRow.country || "",
-        // category: selectedRow.category || "",
         address: selectedRow.address || "",
-        details_en: selectedRow.details_en || "",
-        details_es: selectedRow.details_es || "",
-        details_ja: selectedRow.details_ja || "",
-        details_ko: selectedRow.details_ko || "",
-        details_tl: selectedRow.details_tl || "",
-        details_zh: selectedRow.details_zh || "",
-        // type: selectedRow.type || "",
-        latitude: selectedRow.latitude || "",
-        longitude: selectedRow.longitude || "",
+        latitude: selectedRow.geo.latitude || 0,
+        longitude: selectedRow.geo.longitude || 0,
+        en_name: selectedRow.en_name || "",
+        fr_name: selectedRow.fr_name || "",
+        jp_name: selectedRow.jp_name || "",
+        kr_name: selectedRow.kr_name || "",
+        ph_name: selectedRow.ph_name || "",
+        cn_name: selectedRow.cn_name || "",
+        tc_name: selectedRow.tc_name || "",
+        en_descr: selectedRow.en_descr || "",
+        fr_descr: selectedRow.fr_descr || "",
+        jp_descr: selectedRow.jp_descr || "",
+        kr_descr: selectedRow.kr_descr || "",
+        ph_descr: selectedRow.ph_descr || "",
+        cn_descr: selectedRow.cn_descr || "",
+        tc_descr: selectedRow.tc_descr || "",
       });
-      setCountry(selectedRow.country || "");
-      setCategory(selectedRow.category || "");
-      setType(selectedRow.type || "");
+      setCountry(selectedRow.country_code || "");
+      setCategory(selectedRow.category || 0);
     }
     return () => {
       setInputs({
-        name_ch: "",
-        name_en: "",
-        name_ja: "",
-        name_ko: "",
-        name_malaysia: "",
-        name_sp: "",
-        name_tamil: "",
-        name_thailand: "",
-        // country: "",
-        // category: "",
         address: "",
-        details_en: "",
-        details_es: "",
-        details_ja: "",
-        details_ko: "",
-        details_tl: "",
-        details_zh: "",
-        // type: "",
         latitude: "",
         longitude: "",
+        en_name: "",
+        fr_name: "",
+        jp_name: "",
+        kr_name: "",
+        ph_name: "",
+        cn_name: "",
+        tc_name: "",
+        en_descr: "",
+        fr_descr: "",
+        jp_descr: "",
+        kr_descr: "",
+        ph_descr: "",
+        cn_descr: "",
+        tc_descr: "",
       });
       setCountry("");
-      setCategory("");
-      setType("");
+      setCategory(0);
     };
   }, [open]);
 
@@ -208,44 +194,39 @@ function PlacesPopup({
     setCountry(ev.target.value as string);
   };
   const handleCategoryChange = (ev: React.ChangeEvent<{ value: unknown }>) => {
-    setCategory(ev.target.value as string);
-  };
-  const handleTypeChange = (ev: React.ChangeEvent<{ value: unknown }>) => {
-    setType(ev.target.value as string);
+    setCategory(ev.target.value as number);
   };
 
   const handleSave = async () => {
     const params = {
-      name_ch,
-      name_en,
-      name_ja,
-      name_ko,
-      name_malaysia,
-      name_sp,
-      name_tamil,
-      name_thailand,
-      country,
-      category,
       address,
-      details_en,
-      details_es,
-      details_ja,
-      details_ko,
-      details_tl,
-      details_zh,
-      type,
-      latitude,
-      longitude,
+      geo: new dbSvcProps.GeoPoint(parseFloat(latitude), parseFloat(longitude)),
+      en_name,
+      fr_name,
+      jp_name,
+      kr_name,
+      ph_name,
+      cn_name,
+      tc_name,
+      en_descr,
+      fr_descr,
+      jp_descr,
+      kr_descr,
+      ph_descr,
+      cn_descr,
+      tc_descr,
+      country_code: country,
+      category,
     };
     if (!selectedRow) {
       // 신규
-      await fnSave("t_spots", { ...params, picture: "", tags: [], video: "" });
+      await fnSave("places", { ...params, picture: "", tags: [], video: "" });
       handleClose();
     } else {
       // 업데이트
       // const obj2 = { ...obj, doc: selectedRow.key };
       const doc = selectedRow.key;
-      await fnUpdate("t_spots", doc, params);
+      await fnUpdate("places", doc, params);
       handleClose({ ...selectedRow, ...params });
     }
   };
@@ -303,7 +284,7 @@ function PlacesPopup({
 
   const setOpenMapDefault = () => {
     const selCountry = commonList["country"].filter(
-      (ctry: any) => ctry.Ctry_Name === country
+      (ctry: any) => ctry.Ctry_Code === country
     );
 
     const arrLatLng = selCountry[0].Ctry_Latlng.split(",");
@@ -341,15 +322,6 @@ function PlacesPopup({
             <Grid container spacing={2}>
               <Grid item xs={12}>
                 <Grid item xs={12} className={classes.gridCustom}>
-                  {/* <TextField
-                    required
-                    id="category"
-                    name="category"
-                    label="Category"
-                    fullWidth
-                    value={category}
-                    onChange={onChange}
-                  /> */}
                   <Select
                     labelId="demo-simple-select-outlined-label"
                     id="category"
@@ -363,9 +335,9 @@ function PlacesPopup({
                       Category
                     </MenuItem>
                     {commonList &&
-                      commonList["tspot_category"].map((row: any) => (
-                        <MenuItem key={row.key} value={row.category}>
-                          {row.category}
+                      commonList["category"].map((row: any) => (
+                        <MenuItem key={row.key} value={row.category_cd}>
+                          {row.category_nm}
                         </MenuItem>
                       ))}
                   </Select>
@@ -383,20 +355,13 @@ function PlacesPopup({
                     </MenuItem>
                     {commonList &&
                       commonList["country"].map((row: any) => (
-                        <MenuItem key={row.key} value={row.Ctry_Name}>
+                        <MenuItem key={row.key} value={row.Ctry_Code}>
                           {row.Ctry_Name}
                         </MenuItem>
                       ))}
                   </Select>
-                  {/* <TextField
-                    id="type"
-                    value={type}
-                    onChange={onChange}
-                    name="type"
-                    label="Type"
-                    fullWidth
-                  /> */}
-                  <Select
+
+                  {/* <Select
                     labelId="demo-simple-select-outlined-label"
                     id="type"
                     label="Type"
@@ -408,13 +373,7 @@ function PlacesPopup({
                     <MenuItem value="none" disabled>
                       Type
                     </MenuItem>
-                    {commonList &&
-                      commonList["tspot_type"].map((row: any) => (
-                        <MenuItem key={row.key} value={row.type}>
-                          {row.type}
-                        </MenuItem>
-                      ))}
-                  </Select>
+                  </Select> */}
                 </Grid>
 
                 <TextField
@@ -465,88 +424,79 @@ function PlacesPopup({
                 <Grid item xs={12} className={classes.gridCustom}>
                   <TextField
                     required
-                    id="name_ch"
-                    name="name_ch"
-                    label="Name_ch"
+                    id="en_name"
+                    name="en_name"
+                    label="En_name"
                     fullWidth
-                    value={name_ch}
+                    value={en_name}
                     onChange={onChange}
                   />
                   <TextField
                     required
-                    id="name_en"
-                    name="name_en"
-                    label="Name_en"
+                    id="fr_name"
+                    name="fr_name"
+                    label="Fr_name"
                     fullWidth
-                    value={name_en}
+                    value={fr_name}
                     onChange={onChange}
                   />
                   <TextField
                     required
-                    id="name_ja"
-                    name="name_ja"
-                    label="Name_ja"
+                    id="jp_name"
+                    name="jp_name"
+                    label="Jp_name"
                     fullWidth
-                    value={name_ja}
+                    value={jp_name}
                     onChange={onChange}
                   />
                 </Grid>
                 <Grid item xs={12} className={classes.gridCustom}>
                   <TextField
                     required
-                    id="name_ko"
-                    name="name_ko"
-                    label="Name_ko"
+                    id="kr_name"
+                    name="kr_name"
+                    label="Kr_name"
                     fullWidth
-                    value={name_ko}
+                    value={kr_name}
                     onChange={onChange}
                   />
                   <TextField
                     required
-                    id="name_malaysia"
-                    name="name_malaysia"
-                    label="Name_malaysia"
+                    id="ph_name"
+                    name="ph_name"
+                    label="Ph_name"
                     fullWidth
-                    value={name_malaysia}
+                    value={ph_name}
                     onChange={onChange}
                   />
                   <TextField
                     required
-                    id="name_sp"
-                    name="name_sp"
-                    label="Name_sp"
+                    id="cn_name"
+                    name="cn_name"
+                    label="Cn_name"
                     fullWidth
-                    value={name_sp}
+                    value={cn_name}
                     onChange={onChange}
                   />
                 </Grid>
                 <Grid item xs={12} className={classes.gridCustom}>
                   <TextField
                     required
-                    id="name_tamil"
-                    name="name_tamil"
-                    label="Name_tamil"
+                    id="tc_name"
+                    name="tc_name"
+                    label="Tc_name"
                     fullWidth
-                    value={name_tamil}
-                    onChange={onChange}
-                  />
-                  <TextField
-                    required
-                    id="name_thailand"
-                    name="name_thailand"
-                    label="Name_thailand"
-                    fullWidth
-                    value={name_thailand}
+                    value={tc_name}
                     onChange={onChange}
                   />
                 </Grid>
                 <TextField
                   multiline
-                  id="details_en"
-                  value={details_en}
+                  id="en_descr"
+                  value={en_descr}
                   onChange={onChange}
-                  name="details_en"
-                  label="Details_en"
+                  name="en_descr"
+                  label="En_descr"
                   fullWidth
                   style={{
                     maxHeight: "120px",
@@ -556,11 +506,11 @@ function PlacesPopup({
                 />
                 <TextField
                   multiline
-                  id="details_es"
-                  value={details_es}
+                  id="fr_descr"
+                  value={fr_descr}
                   onChange={onChange}
-                  name="details_es"
-                  label="Details_es"
+                  name="fr_descr"
+                  label="Fr_descr"
                   fullWidth
                   style={{
                     maxHeight: "120px",
@@ -570,11 +520,11 @@ function PlacesPopup({
                 />
                 <TextField
                   multiline
-                  id="details_ja"
-                  value={details_ja}
+                  id="jp_descr"
+                  value={jp_descr}
                   onChange={onChange}
-                  name="details_ja"
-                  label="Details_ja"
+                  name="jp_descr"
+                  label="Jp_descr"
                   fullWidth
                   style={{
                     maxHeight: "120px",
@@ -584,11 +534,11 @@ function PlacesPopup({
                 />
                 <TextField
                   multiline
-                  id="details_ko"
-                  value={details_ko}
+                  id="kr_descr"
+                  value={kr_descr}
                   onChange={onChange}
-                  name="details_ko"
-                  label="Details_ko"
+                  name="kr_descr"
+                  label="Kr_descr"
                   fullWidth
                   style={{
                     maxHeight: "120px",
@@ -598,11 +548,11 @@ function PlacesPopup({
                 />
                 <TextField
                   multiline
-                  id="details_tl"
-                  value={details_tl}
+                  id="ph_descr"
+                  value={ph_descr}
                   onChange={onChange}
-                  name="details_tl"
-                  label="Details_tl"
+                  name="ph_descr"
+                  label="Ph_descr"
                   fullWidth
                   style={{
                     maxHeight: "120px",
@@ -613,11 +563,26 @@ function PlacesPopup({
 
                 <TextField
                   multiline
-                  id="details_zh"
-                  value={details_zh}
+                  id="cn_descr"
+                  value={cn_descr}
                   onChange={onChange}
-                  name="details_zh"
-                  label="Details_zh"
+                  name="cn_descr"
+                  label="Cn_descr"
+                  fullWidth
+                  style={{
+                    maxHeight: "120px",
+                    overflowY: "auto",
+                    marginTop: "3px",
+                  }}
+                />
+
+                <TextField
+                  multiline
+                  id="tc_descr"
+                  value={tc_descr}
+                  onChange={onChange}
+                  name="tc_descr"
+                  label="Tc_descr"
                   fullWidth
                   style={{
                     maxHeight: "120px",
@@ -671,16 +636,16 @@ function PlacesPopup({
 
 function mapStateToProps(state: any, ownProps: any) {
   let selectedRow = [];
-  if (state.fsSearchPageReducer.rowData) {
-    const { data } = state.fsSearchPageReducer.rowData;
-    selectedRow = data?.filter(
+  if (state.placesReducer) {
+    const { rowData } = state.placesReducer;
+    selectedRow = rowData?.filter(
       (row: any) => row.key === ownProps.selectedID
     )[0];
   }
   return {
     selectedRow: selectedRow,
     userInfo: state.statusReducer,
-    commonList: state.fsCountryReducer.rowData?.data,
+    commonList: state.fsCmmnArrayReducer.rowData,
   };
 }
 

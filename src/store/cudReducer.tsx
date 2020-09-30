@@ -1,4 +1,5 @@
 import axios from "axios";
+import { FQupdate } from "../fQuery";
 
 const LOADING = "LOADING";
 const SAVE = "SAVE";
@@ -50,7 +51,8 @@ export const updateRequest = (col: string, doc: string, params: {}) => {
   return async (dispatch: any) => {
     dispatch(loadingAction());
     try {
-      await axios.post("/api/fstore/update", { col, doc, params });
+      // await axios.post("/api/fstore/update", { col, doc, params });
+      await FQupdate({ col, doc, params });
       // console.log("abc", result.data);
       dispatch(updateAction());
     } catch (e) {
@@ -83,7 +85,7 @@ const initState: StateProps = {
   status: "",
 };
 // reducer
-const fireStoreReducer = (state = initState, action: actionType) => {
+const cudReducer = (state = initState, action: actionType) => {
   switch (action.type) {
     case LOADING:
       return { ...state, status: "WAITING" };
@@ -112,4 +114,4 @@ const fireStoreReducer = (state = initState, action: actionType) => {
   }
 };
 
-export default fireStoreReducer;
+export default cudReducer;

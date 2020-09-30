@@ -15,12 +15,12 @@ export const mainListItems = (
       </ListItemIcon>
       <ListItemText primary="Dashboard" />
     </ListItem>
-    <ListItem button component={Link} to="/create">
+    {/* <ListItem button component={Link} to="/create">
       <ListItemIcon>
         <DashboardIcon />
       </ListItemIcon>
       <ListItemText primary="Create" />
-    </ListItem>
+    </ListItem> */}
     <ListItem button component={Link} to="/places">
       <ListItemIcon>
         <DashboardIcon />

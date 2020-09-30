@@ -10,9 +10,9 @@ import {
   MenuItem,
 } from "@material-ui/core";
 import PlacesPopup from "./PlacesPopup";
-import { searchPageRequest, updatePage } from "../../store/placesReducer";
+import { searchPlacesRequest, updatePage } from "../../store/placesReducer";
 import { searchCmmnArrayRequest } from "../../store/fsCmmnArrayReducer";
-import { deleteRequest } from "../../store/fireStoreReducer";
+import { deleteRequest } from "../../store/cudReducer";
 import { DraggableDialog, DataList } from "../commons";
 
 interface Column {
@@ -96,7 +96,7 @@ const useStyles = makeStyles((theme) => ({
 
 function Places({
   placesList,
-  searchPageRequest,
+  searchPlacesRequest,
   fnDelete,
   userInfo,
   placesStatus,
@@ -108,28 +108,20 @@ function Places({
   const classes = useStyles();
   const [open, setOpen] = useState(false);
   const [selectedID, setSelectedID] = useState(null);
-  const [inputs, setInputs] = useState({
-    name_en: "",
-  });
 
-  const { name_en } = inputs;
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [openDialog, setOpenDialog] = useState(false);
 
   const [country, setCountry] = useState("");
-  const [type, setType] = useState("");
+  const [status, setStatus] = useState("");
   const [category, setCategory] = useState("");
 
-  const onChange = (ev: React.ChangeEvent<HTMLInputElement>) => {
-    const { value, name } = ev.target;
-    setInputs({ ...inputs, [name]: value });
-  };
   const handleCountryChange = (ev: React.ChangeEvent<{ value: unknown }>) => {
     setCountry(ev.target.value as string);
   };
-  const handleTypeChange = (ev: React.ChangeEvent<{ value: unknown }>) => {
-    setType(ev.target.value as string);
+  const handleStatusChange = (ev: React.ChangeEvent<{ value: unknown }>) => {
+    setStatus(ev.target.value as string);
   };
   const handleCategoryChange = (ev: React.ChangeEvent<{ value: unknown }>) => {
     setCategory(ev.target.value as string);
@@ -160,9 +152,14 @@ function Places({
 
   const searchParams = (country: any) => {
     const pCategory = category === "All" ? "" : category;
+    const pStatus = status === "All" ? "" : status;
     return {
       col: "places",
-      where: [{ country_code: country }, { category: pCategory }],
+      where: [
+        { country_code: country },
+        { category: pCategory },
+        { status: pStatus },
+      ],
       startPage: 1,
       maxPage: rowsPerPage,
     };
@@ -176,25 +173,28 @@ function Places({
     const openSearch = async () => {
       setCountry(() => commonList["country"][0].Ctry_Code);
       setCategory("All");
-      await searchPageRequest(searchParams(commonList["country"][0].Ctry_Code));
+      setStatus("All");
+      await searchPlacesRequest(
+        searchParams(commonList["country"][0].Ctry_Code)
+      );
     };
     commonList && openSearch();
   }, [commonList]);
 
   useEffect(() => {
-    const searchT = async () =>
-      await searchTspots(rowsPerPage * page + 1, rowsPerPage);
+    const searchP = async () =>
+      await searchPlaces(rowsPerPage * page + 1, rowsPerPage);
 
-    commonList && searchT();
+    commonList && searchP();
   }, [page, rowsPerPage]);
 
-  const searchTspots = async (startPage: number, maxPage: number) => {
+  const searchPlaces = async (startPage: number, maxPage: number) => {
     const params = {
       ...searchParams(country),
       startPage: startPage,
       maxPage: maxPage,
     };
-    await searchPageRequest(params);
+    await searchPlacesRequest(params);
   };
 
   const handleOpen = () => {
@@ -223,7 +223,7 @@ function Places({
     setOpenDialog(false);
     selectedID && (await fnDelete("t_spots", selectedID));
 
-    await searchPageRequest(searchParams(country));
+    await searchPlacesRequest(searchParams(country));
   };
 
   // /**
@@ -292,13 +292,36 @@ function Places({
                 ))}
             </Select>
 
+            <Select
+              labelId="demo-simple-select-outlined-label"
+              id="status"
+              label="Status"
+              variant="outlined"
+              value={status}
+              className={classes.textFiled}
+              onChange={handleStatusChange}
+              placeholder="status"
+            >
+              <MenuItem value="none" disabled>
+                Status
+              </MenuItem>
+              <MenuItem value={"All"} selected>
+                All
+              </MenuItem>
+              <MenuItem value={1} selected>
+                Active
+              </MenuItem>
+              <MenuItem value={0} selected>
+                Inactive
+              </MenuItem>
+            </Select>
             <Button
               variant="contained"
               color="primary"
               className={classes.customButton}
               onClick={() => {
                 setPage(0);
-                return searchPageRequest(searchParams(country));
+                return searchPlacesRequest(searchParams(country));
               }}
             >
               Search
@@ -311,7 +334,7 @@ function Places({
           rowClick={handleRowClick}
           selectedID={selectedID}
           maxHeight={"520"}
-          search={searchTspots}
+          search={searchPlaces}
           page={page}
           rowsPerPage={rowsPerPage}
           setPage={setPage}
@@ -320,14 +343,14 @@ function Places({
         />
         <CardContent>
           <div className={classes.bottom}>
-            <Button
+            {/* <Button
               variant="contained"
               color="primary"
               className={classes.customButton2}
               onClick={handleNew}
             >
               New
-            </Button>
+            </Button> */}
             <Button
               variant="contained"
               color="primary"
@@ -348,12 +371,12 @@ function Places({
         </CardContent>
       </Paper>
 
-      {/* <PlacesPopup
+      <PlacesPopup
         open={open}
         handleClose={handleClose}
         selectedID={selectedID}
         // categoryCom={categoryCom}
-      /> */}
+      />
       <DraggableDialog
         handleCloseDialog={handleCloseDialog}
         openDialog={openDialog}
@@ -381,7 +404,7 @@ function mapStateToProps(state: any) {
 }
 function mapDispatchToProps(dispatch: any) {
   return {
-    searchPageRequest: (param: any) => dispatch(searchPageRequest(param)),
+    searchPlacesRequest: (param: any) => dispatch(searchPlacesRequest(param)),
     updatePage: (param: any) => dispatch(updatePage(param)),
     searchCmmnArrayRequest: (param: any) =>
       dispatch(searchCmmnArrayRequest(param)),

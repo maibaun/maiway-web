@@ -4,11 +4,13 @@ import { composeWithDevTools } from "redux-devtools-extension";
 import loginReducer from "./loginReducer";
 import fsCmmnArrayReducer from "./fsCmmnArrayReducer";
 import placesReducer from "./placesReducer";
+import cudReducer from "./cudReducer";
 
 const rootReducer = combineReducers({
   loginReducer,
   fsCmmnArrayReducer,
   placesReducer,
+  cudReducer,
 });
 
 const store = createStore(

@@ -1,60 +1,60 @@
 import axios from "axios";
 import { FQsearchpage } from "../fQuery";
 
-const LOADING_PAGE = "LOADING_PAGE";
-const SEARCH_PAGE = "SEARCH_PAGE";
-const UPDATE_PAGE = "UPDATE_PAGE";
-const FAIL_PAGE = "FAIL_PAGE";
+const LOADING_PLACES = "LOADING_PLACES";
+const SEARCH_PLACES = "SEARCH_PLACES";
+const UPDATE_PLACES = "UPDATE_PLACES";
+const FAIL_PLACES = "FAIL_PLACES";
 
 // const queryAction = <T extends {}>(data: T) => ({
 //   type: QUERY,
 //   payload: data,
 // });
 // action type
-const loadingPageAction = () => ({
-  type: LOADING_PAGE,
+const loadingPlacesAction = () => ({
+  type: LOADING_PLACES,
   payload: "",
 });
 
-const searchPageAction = (data: any) => ({
-  type: SEARCH_PAGE,
+const searchPlacesAction = (data: any) => ({
+  type: SEARCH_PLACES,
   payload: data,
 });
-const updatePageAction = (data: any) => ({
-  type: UPDATE_PAGE,
+const updatePlacesAction = (data: any) => ({
+  type: UPDATE_PLACES,
   payload: data,
 });
 
-const failPageAction = () => ({
-  type: FAIL_PAGE,
+const failPlacesAction = () => ({
+  type: FAIL_PLACES,
   payload: "",
 });
 
 export type actionType =
-  | ReturnType<typeof loadingPageAction>
-  | ReturnType<typeof searchPageAction>
-  | ReturnType<typeof updatePageAction>
-  | ReturnType<typeof failPageAction>;
+  | ReturnType<typeof loadingPlacesAction>
+  | ReturnType<typeof searchPlacesAction>
+  | ReturnType<typeof updatePlacesAction>
+  | ReturnType<typeof failPlacesAction>;
 
 // search action
-export const searchPageRequest = (params: any) => {
+export const searchPlacesRequest = (params: any) => {
   return async (dispatch: any) => {
-    dispatch(loadingPageAction());
+    dispatch(loadingPlacesAction());
     try {
       // const result = await axios.get("/api/fstore/searchpage", {
       //   params,
       // });
       const result = await FQsearchpage(params);
-      dispatch(searchPageAction(result));
+      dispatch(searchPlacesAction(result));
     } catch (e) {
-      dispatch(failPageAction());
+      dispatch(failPlacesAction());
     }
   };
 };
 
 export const updatePage = (params: any) => {
   return (dispatch: any) => {
-    dispatch(updatePageAction(params));
+    dispatch(updatePlacesAction(params));
   };
 };
 
@@ -73,30 +73,28 @@ const initState: StateProps = {
 // reducer
 const placesReducer = (state = initState, action: actionType) => {
   switch (action.type) {
-    case LOADING_PAGE:
+    case LOADING_PLACES:
       return { status: "WAITING" };
-    case SEARCH_PAGE:
+    case SEARCH_PLACES:
       return {
         status: "SUCCESS",
         rowData: action.payload,
       };
-    case UPDATE_PAGE:
+    case UPDATE_PLACES:
       return {
         status: "SUCCESS",
-        rowData: {
-          data: state.rowData?.data.map((row: any) => {
-            let newRow = {};
-            if (row.key === action.payload.key) {
-              // console.log("row.key");
-              newRow = { ...row, ...action.payload };
-            } else {
-              newRow = { ...row };
-            }
-            return newRow;
-          }),
-        },
+        rowData: state.rowData?.map((row: any) => {
+          let newRow = {};
+          if (row.key === action.payload.key) {
+            // console.log("row.key");
+            newRow = { ...row, ...action.payload };
+          } else {
+            newRow = { ...row };
+          }
+          return newRow;
+        }),
       };
-    case FAIL_PAGE:
+    case FAIL_PLACES:
       return {
         status: "FAILURE",
       };

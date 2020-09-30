@@ -5,6 +5,7 @@ import { connect } from "react-redux";
 import { loginProps, setLoginUserObj } from "../store/loginReducer";
 import { makeStyles, Theme, createStyles } from "@material-ui/core/styles";
 import CircularProgress from "@material-ui/core/CircularProgress";
+import { FQcheckUser } from "../fQuery";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -50,15 +51,21 @@ function App({ setLoginUserObj }: AppProps) {
   const [init, setInit] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   useEffect(() => {
-    authSvc.onAuthStateChanged((user: any) => {
+    authSvc.onAuthStateChanged(async (user: any) => {
       // console.log(user);
       if (user) {
-        setLoginUserObj({
-          displayName: user.displayName,
-          uid: user.uid,
-          photoURL: user.photoURL,
-          updateProfile: (args: any) => user.updateProfile(args),
-        });
+        const arrUserInfo = await FQcheckUser(user.uid);
+        if (arrUserInfo.length > 0) {
+          setLoginUserObj({
+            displayName: user.displayName,
+            uid: user.uid,
+            photoURL: user.photoURL,
+            updateProfile: (args: any) => user.updateProfile(args),
+          });
+        } else {
+          alert("There is no user record corresponding to this identifier.");
+          authSvc.signOut();
+        }
       } else {
         setLoginUserObj({
           displayName: null,
