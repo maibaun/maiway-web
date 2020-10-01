@@ -343,14 +343,14 @@ function Places({
         />
         <CardContent>
           <div className={classes.bottom}>
-            {/* <Button
+            <Button
               variant="contained"
               color="primary"
               className={classes.customButton2}
               onClick={handleNew}
             >
               New
-            </Button> */}
+            </Button>
             <Button
               variant="contained"
               color="primary"

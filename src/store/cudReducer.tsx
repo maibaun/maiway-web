@@ -1,5 +1,5 @@
 import axios from "axios";
-import { FQupdate } from "../fQuery";
+import { FQsave, FQupdate } from "../fQuery";
 
 const LOADING = "LOADING";
 const SAVE = "SAVE";
@@ -37,7 +37,8 @@ export const saveRequest = (col: string, params: {}) => {
   return async (dispatch: any) => {
     dispatch(loadingAction());
     try {
-      await axios.post("/api/fstore/save", { col, params });
+      // await axios.post("/api/fstore/save", { col, params });
+      await FQsave({ col, params });
       // console.log("abc", result.data);
       dispatch(saveAction());
     } catch (e) {

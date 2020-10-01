@@ -1,4 +1,5 @@
 import { dbSvc } from "./fBase";
+import { dbSvcProps } from "./fBase";
 
 const FQcheckUser = async (uid: string) => {
   try {
@@ -141,8 +142,22 @@ const FQsearchpage = async ({ col, where, startPage, maxPage }: any) => {
   }
 };
 
+const FQsave = async ({ col, params }: any) => {
+  try {
+    const doc = dbSvc.collection(col).doc(); // 문서번호 자동 채번
+
+    await doc.set({
+      ...params,
+    });
+
+    // handleCudResponse(res);
+  } catch (error) {
+    // handleCudResponse(res, error);
+  }
+};
+
 const FQupdate = async ({ col, doc, params }: any) => {
-  console.log(col, doc, params);
+  // console.log(col, doc, params);
   doc = doc.replace(/ /g, "");
   try {
     await dbSvc
@@ -158,4 +173,31 @@ const FQupdate = async ({ col, doc, params }: any) => {
     console.log(err);
   }
 };
-export { FQcheckUser, FQcommonArray, FQsearchpage, FQupdate };
+
+/**
+ * Geopoint
+ * @param latitude
+ * @param longitude
+ */
+const FQGeoPoint = (latitude: string, longitude: string) => {
+  if (!latitude || !longitude) {
+    return null;
+  } else {
+    return new dbSvcProps.GeoPoint(parseFloat(latitude), parseFloat(longitude));
+  }
+};
+
+/**
+ * Timestamp Now
+ */
+const FQtimestampNow = () => dbSvcProps.Timestamp.now();
+
+export {
+  FQcheckUser,
+  FQcommonArray,
+  FQsearchpage,
+  FQsave,
+  FQupdate,
+  FQGeoPoint,
+  FQtimestampNow,
+};

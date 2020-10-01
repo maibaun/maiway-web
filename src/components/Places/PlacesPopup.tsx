@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import { connect } from "react-redux";
 import { makeStyles, Theme, createStyles } from "@material-ui/core/styles";
 import {
@@ -18,7 +18,7 @@ import { saveRequest, updateRequest } from "../../store/cudReducer";
 import { setUploadFile, resetUploadFile } from "../../store/fileUploadReducer";
 import { deleteMultiFile } from "../../store/fileDeleteReducer";
 import { CommonPopup, DraggableDialog, MapContainer2 } from "../commons";
-import { dbSvcProps } from "../../fBase";
+import { FQGeoPoint, FQtimestampNow } from "../../fQuery";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -130,14 +130,16 @@ function PlacesPopup({
 
   const [country, setCountry] = useState("");
   const [category, setCategory] = useState(0);
+  const [alertMsg, setAlertMsg] = useState("New");
   const [latLng, setLatLng] = useState<any>({ lat: "", lng: "" });
 
   useEffect(() => {
     if (open && selectedRow) {
+      setAlertMsg("Update");
       setInputs({
         address: selectedRow.address || "",
-        latitude: selectedRow.geo.latitude || 0,
-        longitude: selectedRow.geo.longitude || 0,
+        latitude: selectedRow.geo?.latitude || 0,
+        longitude: selectedRow.geo?.longitude || 0,
         en_name: selectedRow.en_name || "",
         fr_name: selectedRow.fr_name || "",
         jp_name: selectedRow.jp_name || "",
@@ -198,9 +200,15 @@ function PlacesPopup({
   };
 
   const handleSave = async () => {
+    const selCountry = commonList["country"].filter(
+      (ctry: any) => ctry.Ctry_Code === country
+    );
+
+    const currency = selCountry[0]?.Ctry_Currency;
+
     const params = {
       address,
-      geo: new dbSvcProps.GeoPoint(parseFloat(latitude), parseFloat(longitude)),
+      geo: FQGeoPoint(latitude, longitude),
       en_name,
       fr_name,
       jp_name,
@@ -216,11 +224,33 @@ function PlacesPopup({
       cn_descr,
       tc_descr,
       country_code: country,
+      currency,
       category,
+      update_at: FQtimestampNow(),
     };
     if (!selectedRow) {
       // 신규
-      await fnSave("places", { ...params, picture: "", tags: [], video: "" });
+      const newParams = {
+        business_status: true,
+        created_at: FQtimestampNow(),
+        creator: "",
+        formatted_phone_number: "",
+        guide_id: "",
+        is_featured: true,
+        locality: "",
+        modifier: "",
+        opening_hours: "",
+        photos: [],
+        price1: 0,
+        price2: 0,
+        rating: 0,
+        status: 1,
+        update_at: FQtimestampNow(),
+        use_yn: "",
+        user_ratings_total: 0,
+        website: "",
+      };
+      await fnSave("places", { ...params, ...newParams });
       handleClose();
     } else {
       // 업데이트
@@ -360,20 +390,6 @@ function PlacesPopup({
                         </MenuItem>
                       ))}
                   </Select>
-
-                  {/* <Select
-                    labelId="demo-simple-select-outlined-label"
-                    id="type"
-                    label="Type"
-                    value={type}
-                    fullWidth
-                    onChange={handleTypeChange}
-                    required
-                  >
-                    <MenuItem value="none" disabled>
-                      Type
-                    </MenuItem>
-                  </Select> */}
                 </Grid>
 
                 <TextField
@@ -627,8 +643,8 @@ function PlacesPopup({
         handleCloseDialog={handleCloseDialog}
         openDialog={openDialog}
         handleYesDialog={handleUpdate}
-        alertTitle={"Update"}
-        alertMsg={"Update?"}
+        alertTitle={alertMsg}
+        alertMsg={`${alertMsg}?`}
       />
     </>
   );
