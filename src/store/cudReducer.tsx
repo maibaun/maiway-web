@@ -1,5 +1,4 @@
-import axios from "axios";
-import { FQsave, FQupdate } from "../fQuery";
+import { FQdelete, FQsave, FQupdate } from "../fQuery";
 
 const LOADING = "LOADING";
 const SAVE = "SAVE";
@@ -67,8 +66,7 @@ export const deleteRequest = (col: string, doc: string) => {
   return async (dispatch: any) => {
     dispatch(loadingAction());
     try {
-      await axios.delete("/api/fstore/delete", { data: { col, doc } });
-      // console.log("abc", result.data);
+      await FQdelete({ col, doc });
       dispatch(deleteAction());
     } catch (e) {
       dispatch(failAction());

@@ -88,8 +88,13 @@ function App({ setLoginUserObj }: AppProps) {
     });
   };
 
-  const callLoading = () => {
-    setIsLoading((prevState: boolean) => !prevState);
+  type typeProp = "WAITING" | "SUCCESS";
+  const callLoading = (type?: typeProp) => {
+    if (type) {
+      const isLoading = type === "WAITING" ? true : false;
+      setIsLoading(isLoading);
+      // setIsLoading((prevState: boolean) => !prevState);
+    }
   };
   return (
     <>

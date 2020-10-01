@@ -97,9 +97,10 @@ const useStyles = makeStyles((theme) => ({
 function Places({
   placesList,
   searchPlacesRequest,
-  fnDelete,
+  deleteRequest,
   userInfo,
   placesStatus,
+  cudStatus,
   updatePage,
   searchCmmnArrayRequest,
   commonList,
@@ -131,10 +132,16 @@ function Places({
    * loading true or false
    */
   useEffect(() => {
-    if (placesStatus !== "") {
-      callLoading();
+    // console.log(placesStatus, cudStatus);
+    if (placesStatus === "WAITING" || cudStatus === "WAITING") {
+      callLoading("WAITING");
+    } else if (
+      placesStatus === "SUCCESS" &&
+      (cudStatus === "SUCCESS" || cudStatus === "")
+    ) {
+      callLoading("SUCCESS");
     }
-  }, [placesStatus]);
+  }, [placesStatus, cudStatus]);
 
   /**
    * 공통 collection 조회
@@ -174,9 +181,11 @@ function Places({
       setCountry(() => commonList["country"][0].Ctry_Code);
       setCategory("All");
       setStatus("All");
-      // await searchPlacesRequest(
-      //   searchParams(commonList["country"][0].Ctry_Code)
-      // );
+      if (commonList["country"].length > 0) {
+        await searchPlacesRequest(
+          searchParams(commonList["country"][0].Ctry_Code)
+        );
+      }
     };
     commonList && openSearch();
   }, [commonList]);
@@ -185,7 +194,7 @@ function Places({
     const searchP = async () =>
       await searchPlaces(rowsPerPage * page + 1, rowsPerPage);
 
-    commonList && searchP();
+    commonList && country !== "" && searchP();
   }, [page, rowsPerPage]);
 
   const searchPlaces = async (startPage: number, maxPage: number) => {
@@ -221,17 +230,17 @@ function Places({
    */
   const handleDelete = async () => {
     setOpenDialog(false);
-    selectedID && (await fnDelete("t_spots", selectedID));
+    selectedID && (await deleteRequest("places", selectedID));
 
     await searchPlacesRequest(searchParams(country));
   };
 
-  // /**
-  //  * confirm 팝업 open
-  //  */
-  // const handleClickOpenDialog = () => {
-  //   setOpenDialog(true);
-  // };
+  /**
+   * confirm 팝업 open
+   */
+  const handleClickOpenDialog = () => {
+    selectedID && setOpenDialog(true);
+  };
   /**
    * confirm 팝업 close
    */
@@ -359,14 +368,14 @@ function Places({
             >
               Modify
             </Button>
-            {/* <Button
+            <Button
               variant="contained"
               color="primary"
               className={classes.customButton2}
               onClick={handleClickOpenDialog}
             >
               Delete
-            </Button> */}
+            </Button>
           </div>
         </CardContent>
       </Paper>
@@ -394,10 +403,10 @@ function mapStateToProps(state: any) {
     state.fsCmmnArrayReducer.status === "SUCCESS"
       ? state.fsCmmnArrayReducer.rowData
       : null;
-
   return {
     placesList: state.placesReducer?.rowData,
     placesStatus: state.placesReducer?.status,
+    cudStatus: state.cudReducer?.status,
     userInfo: state.statusReducer,
     commonList,
   };
@@ -408,7 +417,8 @@ function mapDispatchToProps(dispatch: any) {
     updatePage: (param: any) => dispatch(updatePage(param)),
     searchCmmnArrayRequest: (param: any) =>
       dispatch(searchCmmnArrayRequest(param)),
-    // fnDelete: (col: string, doc: string) => dispatch(deleteRequest(col, doc)),
+    deleteRequest: (col: string, doc: string) =>
+      dispatch(deleteRequest(col, doc)),
   };
 }
 export default connect(mapStateToProps, mapDispatchToProps)(Places);

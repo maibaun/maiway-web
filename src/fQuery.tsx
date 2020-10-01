@@ -174,6 +174,19 @@ const FQupdate = async ({ col, doc, params }: any) => {
   }
 };
 
+interface FQdeleteProps {
+  col: string;
+  doc: string;
+}
+const FQdelete = async ({ col, doc }: FQdeleteProps) => {
+  doc = doc.replace(/ /g, "");
+  try {
+    await dbSvc.collection(col).doc(doc).delete();
+  } catch (err) {
+    console.log(err);
+  }
+};
+
 /**
  * Geopoint
  * @param latitude
@@ -198,6 +211,7 @@ export {
   FQsearchpage,
   FQsave,
   FQupdate,
+  FQdelete,
   FQGeoPoint,
   FQtimestampNow,
 };

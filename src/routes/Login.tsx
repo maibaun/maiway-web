@@ -60,7 +60,7 @@ function Login({ callLoading }: any) {
   const onSubmit = async () => {
     // event.preventDefault();
     try {
-      callLoading();
+      callLoading("WAITING");
       let data;
       // if (newAccount) {
       // data = await authSvc.createUserWithEmailAndPassword(email, password);
@@ -70,7 +70,7 @@ function Login({ callLoading }: any) {
     } catch (error) {
       setMessage(error.message);
     } finally {
-      callLoading();
+      callLoading("SUCCESS");
     }
   };
 
