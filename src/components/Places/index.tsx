@@ -141,13 +141,13 @@ function Places({
    * country, category
    */
   useEffect(() => {
-    const searchCountry = async () => {
+    const searchCommon = async () => {
       await searchCmmnArrayRequest([
         { doc: "country", orderBy: "Ctry_Name" },
         { doc: "category", orderBy: "category_nm" },
       ]);
     };
-    searchCountry();
+    searchCommon();
   }, []);
 
   const searchParams = (country: any) => {
@@ -174,9 +174,9 @@ function Places({
       setCountry(() => commonList["country"][0].Ctry_Code);
       setCategory("All");
       setStatus("All");
-      await searchPlacesRequest(
-        searchParams(commonList["country"][0].Ctry_Code)
-      );
+      // await searchPlacesRequest(
+      //   searchParams(commonList["country"][0].Ctry_Code)
+      // );
     };
     commonList && openSearch();
   }, [commonList]);
