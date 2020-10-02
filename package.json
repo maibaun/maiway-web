@@ -33,8 +33,7 @@
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "predeploy": "yarn build",
-    "deploy": "node gh_pages",
-    "deploy_t": "gh-pages -d build"
+    "deploy": "node gh_pages"
   },
   "eslintConfig": {
     "extends": "react-app"
