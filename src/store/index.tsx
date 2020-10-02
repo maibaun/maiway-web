@@ -5,12 +5,14 @@ import loginReducer from "./loginReducer";
 import fsCmmnArrayReducer from "./fsCmmnArrayReducer";
 import placesReducer from "./placesReducer";
 import cudReducer from "./cudReducer";
+import languageReducer from "./languageReducer";
 
 const rootReducer = combineReducers({
   loginReducer,
   fsCmmnArrayReducer,
   placesReducer,
   cudReducer,
+  languageReducer,
 });
 
 const store = createStore(

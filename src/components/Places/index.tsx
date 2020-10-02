@@ -8,6 +8,8 @@ import {
   Paper,
   Select,
   MenuItem,
+  FormControl,
+  InputLabel,
 } from "@material-ui/core";
 import PlacesPopup from "./PlacesPopup";
 import { searchPlacesRequest, updatePage } from "../../store/placesReducer";
@@ -91,6 +93,10 @@ const useStyles = makeStyles((theme) => ({
     display: "absolute",
     top: "50%",
     left: "50%",
+  },
+  formControl: {
+    margin: theme.spacing(1),
+    minWidth: 160,
   },
 }));
 
@@ -258,72 +264,77 @@ function Places({
       <Paper>
         <CardContent>
           <div className={classes.top}>
-            <Select
-              labelId="demo-simple-select-outlined-label"
-              id="country"
-              label="Country"
-              variant="outlined"
-              value={country}
-              className={classes.textFiled}
-              onChange={handleCountryChange}
-            >
-              <MenuItem value="none" disabled>
+            <FormControl variant="outlined" className={classes.formControl}>
+              <InputLabel id="demo-simple-select-outlined-label">
                 Country
-              </MenuItem>
-              {commonList &&
-                commonList["country"].map((row: any) => (
-                  <MenuItem key={row.key} value={row.Ctry_Code}>
-                    {row.Ctry_Name}
-                  </MenuItem>
-                ))}
-            </Select>
-            <Select
-              labelId="demo-simple-select-outlined-label"
-              id="category"
-              label="Category"
-              variant="outlined"
-              value={category}
-              className={classes.textFiled}
-              onChange={handleCategoryChange}
-              placeholder="category"
-            >
-              <MenuItem value="none" disabled>
+              </InputLabel>
+              <Select
+                labelId="demo-simple-select-outlined-label"
+                id="country"
+                label="Country"
+                variant="outlined"
+                value={country}
+                className={classes.textFiled}
+                onChange={handleCountryChange}
+              >
+                {commonList &&
+                  commonList["country"].map((row: any) => (
+                    <MenuItem key={row.key} value={row.Ctry_Code}>
+                      {row.Ctry_Name}
+                    </MenuItem>
+                  ))}
+              </Select>
+            </FormControl>
+            <FormControl variant="outlined" className={classes.formControl}>
+              <InputLabel id="demo-simple-select-outlined-label">
                 Category
-              </MenuItem>
-              <MenuItem value={"All"} selected>
-                All
-              </MenuItem>
-              {commonList &&
-                commonList["category"].map((row: any) => (
-                  <MenuItem key={row.key} value={row.category_cd}>
-                    {row.category_nm}
-                  </MenuItem>
-                ))}
-            </Select>
-
-            <Select
-              labelId="demo-simple-select-outlined-label"
-              id="status"
-              label="Status"
-              variant="outlined"
-              value={status}
-              className={classes.textFiled}
-              onChange={handleStatusChange}
-              placeholder="status"
-            >
-              <MenuItem value="none" disabled>
+              </InputLabel>
+              <Select
+                labelId="demo-simple-select-outlined-label"
+                id="category"
+                label="Category"
+                variant="outlined"
+                value={category}
+                className={classes.textFiled}
+                onChange={handleCategoryChange}
+                placeholder="category"
+              >
+                <MenuItem value={"All"} selected>
+                  All
+                </MenuItem>
+                {commonList &&
+                  commonList["category"].map((row: any) => (
+                    <MenuItem key={row.key} value={row.category_cd}>
+                      {row.category_nm}
+                    </MenuItem>
+                  ))}
+              </Select>
+            </FormControl>
+            <FormControl variant="outlined" className={classes.formControl}>
+              <InputLabel id="demo-simple-select-outlined-label">
                 Status
-              </MenuItem>
-              <MenuItem value={"All"} selected>
-                All
-              </MenuItem>
-              <MenuItem value={1} selected>
-                Active
-              </MenuItem>
-              <MenuItem value={0} selected>
-                Inactive
-              </MenuItem>
-            </Select>
+              </InputLabel>
+              <Select
+                labelId="demo-simple-select-outlined-label"
+                id="status"
+                label="Status"
+                variant="outlined"
+                value={status}
+                className={classes.textFiled}
+                onChange={handleStatusChange}
+                placeholder="status"
+              >
+                <MenuItem value={"All"} selected>
+                  All
+                </MenuItem>
+                <MenuItem value={1} selected>
+                  Active
+                </MenuItem>
+                <MenuItem value={0} selected>
+                  Inactive
+                </MenuItem>
+              </Select>
+            </FormControl>
             <Button
               variant="contained"
               color="primary"

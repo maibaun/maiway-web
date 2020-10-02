@@ -35,6 +35,9 @@ const AppRouter = ({ userObj, refreshUser, callLoading }: AppRouterProps) => {
             <Route exact path="/gallery">
               <Home callLoading={callLoading} />
             </Route>
+            <Route exact path="/settings">
+              <Home callLoading={callLoading} />
+            </Route>
             {/* <Route path="/:id">
               <Home callLoading={callLoading} />
             </Route> */}

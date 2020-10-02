@@ -5,7 +5,7 @@ import Tab from "@material-ui/core/Tab";
 import Typography from "@material-ui/core/Typography";
 import Box from "@material-ui/core/Box";
 import { Paper, CssBaseline } from "@material-ui/core";
-// import Language from "./Language";
+import Language from "./Language";
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -64,7 +64,7 @@ function Settings() {
       </Tabs>
       <CssBaseline />
       <TabPanel value={value} index={0}>
-        {/* <Language /> */}
+        <Language />
       </TabPanel>
       <TabPanel value={value} index={1}>
         payment

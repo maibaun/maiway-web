@@ -37,6 +37,7 @@ import Gallery from "../components/Gallery";
 import Chart from "../components/Chart";
 import Places from "../components/Places";
 import Create from "../components/Create";
+import Settings from "../components/Settings";
 
 const drawerWidth = 240;
 
@@ -144,7 +145,7 @@ function Home({ userObj, callLoading }: HomeProps) {
           {pathname === "/places" && <Places callLoading={callLoading} />}
           {pathname === "/chart" && <Chart />}
           {pathname === "/gallery" && <Gallery />}
-          {/* {pathname === "/settings" && <Settings />} */}
+          {pathname === "/settings" && <Settings />}
 
           <Box pt={4}>
             <Copyright />
