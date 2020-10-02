@@ -52,7 +52,7 @@ function App({ setLoginUserObj }: AppProps) {
   const [isLoading, setIsLoading] = useState(false);
   useEffect(() => {
     authSvc.onAuthStateChanged(async (user: any) => {
-      console.log(user);
+      // console.log(user);
       if (user) {
         const arrUserInfo = await FQcheckUser(user.uid);
         if (arrUserInfo.length > 0) {

@@ -120,14 +120,14 @@ function Language({
       <div className={classes.root}>
         <Title>Change language</Title>
         <Paper elevation={3} className={classes.paper}>
-          <Typography component={"span"}>In use:</Typography>
+          <Typography component={"span"}>In use: {t(`${language}`)}</Typography>
           <InputLabel className={classes.inputLabel}>
             {/* {cookies["maiway-language"]} */}
           </InputLabel>
 
           <Typography className={classes.typoBody} variant="h6">
-            Currently, the language is {t("hello")}. if you wish to change the
-            language, choose a language in dropdown and click Confirm.
+            Currently, the language is {t(`${language}`)}. if you wish to change
+            the language, choose a language in dropdown and click Confirm.
           </Typography>
           <FormControl variant="outlined" className={classes.formControl}>
             <InputLabel id="demo-simple-select-outlined-label">
