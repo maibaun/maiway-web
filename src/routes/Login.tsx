@@ -85,9 +85,14 @@ function Login({ callLoading }: any) {
     let provider: any;
     if (name === "google") {
       provider = new firebaseInstance.auth.GoogleAuthProvider();
-    } else if (name === "github") {
     }
+    // else if (name === "github") {
+    //   provider = new firebaseInstance.auth.GithubAuthProvider();
+    // } else if (name === "facebook") {
+    //   provider = new firebaseInstance.auth.FacebookAuthProvider();
+    // }
     const data = await authSvc.signInWithPopup(provider);
+    // console.log(data);
   };
 
   return (
@@ -163,6 +168,17 @@ function Login({ callLoading }: any) {
             >
               Sign in with Google
             </Button>
+            {/* <Button
+              type="button"
+              name="facebook"
+              fullWidth
+              variant="contained"
+              color="secondary"
+              className={classes.submit}
+              onClick={onSocialClick}
+            >
+              Sign in with Facebook
+            </Button> */}
             <Typography
               component="div"
               variant="h6"

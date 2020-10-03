@@ -4,7 +4,6 @@ import { makeStyles } from "@material-ui/core/styles";
 import {
   CardContent,
   Button,
-  TextField,
   Paper,
   Select,
   MenuItem,
@@ -16,6 +15,7 @@ import { searchPlacesRequest, updatePage } from "../../store/placesReducer";
 import { searchCmmnArrayRequest } from "../../store/fsCmmnArrayReducer";
 import { deleteRequest } from "../../store/cudReducer";
 import { DraggableDialog, DataList } from "../commons";
+import { useTranslation } from "react-i18next";
 
 interface Column {
   id: "no" | "en_name" | "country_code" | "category" | "address" | "en_descr";
@@ -104,7 +104,6 @@ function Places({
   placesList,
   searchPlacesRequest,
   deleteRequest,
-  userInfo,
   placesStatus,
   cudStatus,
   updatePage,
@@ -113,6 +112,7 @@ function Places({
   callLoading,
 }: any) {
   const classes = useStyles();
+  const { t, i18n } = useTranslation();
   const [open, setOpen] = useState(false);
   const [selectedID, setSelectedID] = useState(null);
 
@@ -266,7 +266,7 @@ function Places({
           <div className={classes.top}>
             <FormControl variant="outlined" className={classes.formControl}>
               <InputLabel id="demo-simple-select-outlined-label">
-                Country
+                {t("Country")}
               </InputLabel>
               <Select
                 labelId="demo-simple-select-outlined-label"
@@ -287,7 +287,7 @@ function Places({
             </FormControl>
             <FormControl variant="outlined" className={classes.formControl}>
               <InputLabel id="demo-simple-select-outlined-label">
-                Category
+                {t("Category")}
               </InputLabel>
               <Select
                 labelId="demo-simple-select-outlined-label"
@@ -300,7 +300,7 @@ function Places({
                 placeholder="category"
               >
                 <MenuItem value={"All"} selected>
-                  All
+                  {t("All")}
                 </MenuItem>
                 {commonList &&
                   commonList["category"].map((row: any) => (
@@ -312,7 +312,7 @@ function Places({
             </FormControl>
             <FormControl variant="outlined" className={classes.formControl}>
               <InputLabel id="demo-simple-select-outlined-label">
-                Status
+                {t("Status")}
               </InputLabel>
               <Select
                 labelId="demo-simple-select-outlined-label"
@@ -325,7 +325,7 @@ function Places({
                 placeholder="status"
               >
                 <MenuItem value={"All"} selected>
-                  All
+                  {t("All")}
                 </MenuItem>
                 <MenuItem value={1} selected>
                   Active
@@ -344,12 +344,15 @@ function Places({
                 return searchPlacesRequest(searchParams(country));
               }}
             >
-              Search
+              {t("Search")}
             </Button>
           </div>
         </CardContent>
         <DataList
-          columns={columns}
+          columns={columns.map((column) => ({
+            ...column,
+            label: t(column.label),
+          }))}
           rows={(placesStatus === "SUCCESS" && placesList) || []}
           rowClick={handleRowClick}
           selectedID={selectedID}
@@ -369,7 +372,7 @@ function Places({
               className={classes.customButton2}
               onClick={handleNew}
             >
-              New
+              {t("New")}
             </Button>
             <Button
               variant="contained"
@@ -377,7 +380,7 @@ function Places({
               className={classes.customButton2}
               onClick={handleModify}
             >
-              Modify
+              {t("Modify")}
             </Button>
             <Button
               variant="contained"
@@ -385,7 +388,7 @@ function Places({
               className={classes.customButton2}
               onClick={handleClickOpenDialog}
             >
-              Delete
+              {t("Delete")}
             </Button>
           </div>
         </CardContent>
@@ -418,7 +421,6 @@ function mapStateToProps(state: any) {
     placesList: state.placesReducer?.rowData,
     placesStatus: state.placesReducer?.status,
     cudStatus: state.cudReducer?.status,
-    userInfo: state.statusReducer,
     commonList,
   };
 }

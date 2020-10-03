@@ -1,5 +1,5 @@
-import { withTranslation } from "react-i18next";
 import React, { useState, useEffect } from "react";
+import { useTranslation } from "react-i18next";
 import { Theme, createStyles, makeStyles } from "@material-ui/core/styles";
 import {
   Paper,
@@ -14,8 +14,6 @@ import { Title, DraggableDialog } from "../commons";
 import { connect } from "react-redux";
 import { updateLangRequest } from "../../store/languageReducer";
 import { rootState } from "../../store";
-// import { updateLangRequest } from "../../store/languageReducer";
-// import { useCookies } from "react-cookie";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -67,8 +65,9 @@ const arrLanguage: languageProps[] = [
   { idx: 6, lang_cd: "PH", lang_nm: "PHILIPPINES/TAGALOG" },
 ];
 
-function Language({ updateLangRequest, localLanguage, t, i18n }: any) {
+function Language({ updateLangRequest, localLanguage }: any) {
   const classes = useStyles();
+  const { t, i18n } = useTranslation();
   const [language, setLanguage] = useState("");
   const [openDialog, setOpenDialog] = useState(false);
 
@@ -181,6 +180,4 @@ function mapDispatchToProps(dispatch: any) {
       dispatch(updateLangRequest(language)),
   };
 }
-export default withTranslation()(
-  connect(mapStateToProps, mapDispatchToProps)(Language)
-);
+export default connect(mapStateToProps, mapDispatchToProps)(Language);

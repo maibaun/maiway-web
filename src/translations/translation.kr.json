@@ -1,6 +1,4 @@
 {
-  "hello": "안녕",
-  "bye": "잘가",
   "EN": "영어",
   "KR": "한국어",
   "TC": "번체",
@@ -8,5 +6,17 @@
   "JP": "일본어",
   "FR": "프랑스어",
   "PH": "필리핀어",
-  "change language?": "언어를 변경하시겠습니까?"
+  "change language?": "언어를 변경하시겠습니까?",
+  "Country": "나라",
+  "Category": "카테고리",
+  "Status": "상태",
+  "All": "전체",
+  "Search": "조회",
+  "No": "No",
+  "New": "신규",
+  "Modify": "수정",
+  "Delete": "삭제",
+  "Name": "이름",
+  "Address": "주소",
+  "Details": "상세정보"
 }

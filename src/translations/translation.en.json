@@ -1,6 +1,4 @@
 {
-  "hello": "hello",
-  "bye": "잘가",
   "EN": "ENGLISH",
   "KR": "KOREAN",
   "TC": "CHINESE TRADITIONAL",
@@ -8,5 +6,16 @@
   "JP": "JAPANESE",
   "FR": "FRENCH",
   "PH": "PHILIPPINES/TAGALOG",
-  "change language?": "change language?"
+  "change language?": "change language?",
+  "Country": "Country",
+  "Category": "Category",
+  "Status": "Status",
+  "All": "All",
+  "Search": "Search",
+  "New": "New",
+  "Modify": "Modify",
+  "Delete": "Delete",
+  "Name": "Name",
+  "Address": "Address",
+  "Details": "Details"
 }

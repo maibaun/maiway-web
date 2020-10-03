@@ -19,7 +19,7 @@ type actionType =
   | ReturnType<typeof searchLangAction>
   | ReturnType<typeof updateLangAction>;
 
-const getLanguage = () => {
+export const getLanguage = () => {
   const localLanguage = window.localStorage.getItem(MAIWAY_LANGUAGE) || "EN";
   return localLanguage;
 };

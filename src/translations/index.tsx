@@ -7,6 +7,7 @@ import translationCn from "./translation.cn.json";
 import translationTc from "./translation.tc.json";
 import translationJp from "./translation.jp.json";
 import translationPh from "./translation.ph.json";
+import { getLanguage } from "../store/languageReducer";
 
 const resource = {
   EN: {
@@ -34,8 +35,8 @@ const resource = {
 
 i18n.use(initReactI18next).init({
   resources: resource,
-  lng: "EN",
-  fallbackLng: "KR",
+  lng: getLanguage(),
+  fallbackLng: "EN",
   debug: true,
   keySeparator: false,
   interpolation: { escapeValue: false },
