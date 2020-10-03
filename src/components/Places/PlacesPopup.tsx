@@ -19,6 +19,7 @@ import { setUploadFile, resetUploadFile } from "../../store/fileUploadReducer";
 import { deleteMultiFile } from "../../store/fileDeleteReducer";
 import { CommonPopup, DraggableDialog, MapContainer2 } from "../commons";
 import { FQGeoPoint, FQtimestampNow } from "../../fQuery";
+import { rootState } from "../../store";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -650,7 +651,7 @@ function PlacesPopup({
   );
 }
 
-function mapStateToProps(state: any, ownProps: any) {
+function mapStateToProps(state: rootState, ownProps: any) {
   let selectedRow = [];
   if (state.placesReducer) {
     const { rowData } = state.placesReducer;
@@ -660,7 +661,6 @@ function mapStateToProps(state: any, ownProps: any) {
   }
   return {
     selectedRow: selectedRow,
-    userInfo: state.statusReducer,
     commonList: state.fsCmmnArrayReducer.rowData,
   };
 }

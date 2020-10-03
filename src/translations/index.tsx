@@ -1,16 +1,37 @@
 import i18n from "i18next";
 import { initReactI18next } from "react-i18next";
 import translationEn from "./translation.en.json";
-import translationKo from "./translation.ko.json";
+import translationKr from "./translation.kr.json";
+import translationFr from "./translation.fr.json";
+import translationCn from "./translation.cn.json";
+import translationTc from "./translation.tc.json";
+import translationJp from "./translation.jp.json";
+import translationPh from "./translation.ph.json";
 
 const resource = {
   EN: {
     translation: translationEn,
   },
   KR: {
-    translation: translationKo,
+    translation: translationKr,
+  },
+  FR: {
+    translation: translationFr,
+  },
+  CN: {
+    translation: translationCn,
+  },
+  TC: {
+    translation: translationTc,
+  },
+  JP: {
+    translation: translationJp,
+  },
+  PH: {
+    translation: translationPh,
   },
 };
+
 i18n.use(initReactI18next).init({
   resources: resource,
   lng: "EN",

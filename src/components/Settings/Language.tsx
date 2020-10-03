@@ -13,6 +13,7 @@ import {
 import { Title, DraggableDialog } from "../commons";
 import { connect } from "react-redux";
 import { updateLangRequest } from "../../store/languageReducer";
+import { rootState } from "../../store";
 // import { updateLangRequest } from "../../store/languageReducer";
 // import { useCookies } from "react-cookie";
 
@@ -66,13 +67,7 @@ const arrLanguage: languageProps[] = [
   { idx: 6, lang_cd: "PH", lang_nm: "PHILIPPINES/TAGALOG" },
 ];
 
-function Language({
-  userState,
-  updateLangRequest,
-  localLanguage,
-  t,
-  i18n,
-}: any) {
+function Language({ updateLangRequest, localLanguage, t, i18n }: any) {
   const classes = useStyles();
   const [language, setLanguage] = useState("");
   const [openDialog, setOpenDialog] = useState(false);
@@ -120,14 +115,17 @@ function Language({
       <div className={classes.root}>
         <Title>Change language</Title>
         <Paper elevation={3} className={classes.paper}>
-          <Typography component={"span"}>In use: {t(`${language}`)}</Typography>
+          <Typography component={"span"}>
+            In use: {t(`${localLanguage.language}`)}
+          </Typography>
           <InputLabel className={classes.inputLabel}>
             {/* {cookies["maiway-language"]} */}
           </InputLabel>
 
           <Typography className={classes.typoBody} variant="h6">
-            Currently, the language is {t(`${language}`)}. if you wish to change
-            the language, choose a language in dropdown and click Confirm.
+            Currently, the language is {t(`${localLanguage.language}`)}. if you
+            wish to change the language, choose a language in dropdown and click
+            Confirm.
           </Typography>
           <FormControl variant="outlined" className={classes.formControl}>
             <InputLabel id="demo-simple-select-outlined-label">
@@ -165,16 +163,15 @@ function Language({
           openDialog={openDialog}
           handleYesDialog={handleSaveLanguage}
           alertTitle={"Change language"}
-          alertMsg={"change language?"}
+          alertMsg={t("change language?")}
         />
       </div>
     </>
   );
 }
 
-function mapStateToProps(state: any) {
+function mapStateToProps(state: rootState) {
   return {
-    userState: state.statusReducer,
     localLanguage: state.languageReducer,
   };
 }
