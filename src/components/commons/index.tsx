@@ -4,6 +4,7 @@ import Title from "./Title";
 import CommonPopup from "./CommonPopup";
 import MapContainer2 from "./MapContainer2";
 import DataList from "./DataList";
+import CmmnSelect from "./CmmnSelect";
 
 export {
   Copyright,
@@ -12,4 +13,5 @@ export {
   CommonPopup,
   MapContainer2,
   DataList,
+  CmmnSelect,
 };

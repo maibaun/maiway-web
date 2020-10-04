@@ -11,6 +11,7 @@
   "Category": "카테고리",
   "Status": "상태",
   "All": "전체",
+  "Select": "선택",
   "Search": "조회",
   "No": "No",
   "New": "신규",
@@ -18,5 +19,7 @@
   "Delete": "삭제",
   "Name": "이름",
   "Address": "주소",
-  "Details": "상세정보"
+  "Details": "상세정보",
+  "Please select a country": "나라를 선택하십시오.",
+  "Please select a category": "카테고리를 선택하십시오."
 }

@@ -1,20 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { connect } from "react-redux";
 import { makeStyles } from "@material-ui/core/styles";
-import {
-  CardContent,
-  Button,
-  Paper,
-  Select,
-  MenuItem,
-  FormControl,
-  InputLabel,
-} from "@material-ui/core";
+import { CardContent, Button, Paper } from "@material-ui/core";
 import PlacesPopup from "./PlacesPopup";
 import { searchPlacesRequest, updatePage } from "../../store/placesReducer";
 import { searchCmmnArrayRequest } from "../../store/fsCmmnArrayReducer";
 import { deleteRequest } from "../../store/cudReducer";
-import { DraggableDialog, DataList } from "../commons";
+import { DraggableDialog, DataList, CmmnSelect } from "../commons";
 import { useTranslation } from "react-i18next";
 
 interface Column {
@@ -100,6 +92,14 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+/**
+ * Status code
+ */
+const StatusList = () => [
+  { key: 0, value: 0, text: "Inactive" },
+  { key: 1, value: 1, text: "Active" },
+];
+
 function Places({
   placesList,
   searchPlacesRequest,
@@ -112,7 +112,7 @@ function Places({
   callLoading,
 }: any) {
   const classes = useStyles();
-  const { t, i18n } = useTranslation();
+  const { t } = useTranslation();
   const [open, setOpen] = useState(false);
   const [selectedID, setSelectedID] = useState(null);
 
@@ -123,6 +123,7 @@ function Places({
   const [country, setCountry] = useState("");
   const [status, setStatus] = useState("");
   const [category, setCategory] = useState("");
+  const [test, setTest] = useState("");
 
   const handleCountryChange = (ev: React.ChangeEvent<{ value: unknown }>) => {
     setCountry(ev.target.value as string);
@@ -132,6 +133,9 @@ function Places({
   };
   const handleCategoryChange = (ev: React.ChangeEvent<{ value: unknown }>) => {
     setCategory(ev.target.value as string);
+  };
+  const handleTestChange = (ev: React.ChangeEvent<{ value: unknown }>) => {
+    setTest(ev.target.value as string);
   };
 
   /**
@@ -224,6 +228,10 @@ function Places({
     setOpen(false);
   };
 
+  const searchClick = () => {
+    setPage(0);
+    return searchPlacesRequest(searchParams(country));
+  };
   /**
    * modify
    */
@@ -264,85 +272,34 @@ function Places({
       <Paper>
         <CardContent>
           <div className={classes.top}>
-            <FormControl variant="outlined" className={classes.formControl}>
-              <InputLabel id="demo-simple-select-outlined-label">
-                {t("Country")}
-              </InputLabel>
-              <Select
-                labelId="demo-simple-select-outlined-label"
-                id="country"
-                label="Country"
-                variant="outlined"
-                value={country}
-                className={classes.textFiled}
-                onChange={handleCountryChange}
-              >
-                {commonList &&
-                  commonList["country"].map((row: any) => (
-                    <MenuItem key={row.key} value={row.Ctry_Code}>
-                      {row.Ctry_Name}
-                    </MenuItem>
-                  ))}
-              </Select>
-            </FormControl>
-            <FormControl variant="outlined" className={classes.formControl}>
-              <InputLabel id="demo-simple-select-outlined-label">
-                {t("Category")}
-              </InputLabel>
-              <Select
-                labelId="demo-simple-select-outlined-label"
-                id="category"
-                label="Category"
-                variant="outlined"
-                value={category}
-                className={classes.textFiled}
-                onChange={handleCategoryChange}
-                placeholder="category"
-              >
-                <MenuItem value={"All"} selected>
-                  {t("All")}
-                </MenuItem>
-                {commonList &&
-                  commonList["category"].map((row: any) => (
-                    <MenuItem key={row.key} value={row.category_cd}>
-                      {row.category_nm}
-                    </MenuItem>
-                  ))}
-              </Select>
-            </FormControl>
-            <FormControl variant="outlined" className={classes.formControl}>
-              <InputLabel id="demo-simple-select-outlined-label">
-                {t("Status")}
-              </InputLabel>
-              <Select
-                labelId="demo-simple-select-outlined-label"
-                id="status"
-                label="Status"
-                variant="outlined"
-                value={status}
-                className={classes.textFiled}
-                onChange={handleStatusChange}
-                placeholder="status"
-              >
-                <MenuItem value={"All"} selected>
-                  {t("All")}
-                </MenuItem>
-                <MenuItem value={1} selected>
-                  Active
-                </MenuItem>
-                <MenuItem value={0} selected>
-                  Inactive
-                </MenuItem>
-              </Select>
-            </FormControl>
+            <CmmnSelect
+              label="Country"
+              value={country}
+              itemList={commonList && commonList["country"]}
+              keyValue={{ key: "Ctry_Code", value: "Ctry_Name" }}
+              onChange={handleCountryChange}
+            />
+            <CmmnSelect
+              label="Category"
+              value={category || "All"}
+              firstItem="All"
+              itemList={commonList && commonList["category"]}
+              keyValue={{ key: "category_cd", value: "category_nm" }}
+              onChange={handleCategoryChange}
+            />
+            <CmmnSelect
+              label="Status"
+              value={status || "All"}
+              firstItem="All"
+              itemList={StatusList()}
+              keyValue={{ key: "value", value: "text" }}
+              onChange={handleStatusChange}
+            />
             <Button
               variant="contained"
               color="primary"
               className={classes.customButton}
-              onClick={() => {
-                setPage(0);
-                return searchPlacesRequest(searchParams(country));
-              }}
+              onClick={searchClick}
             >
               {t("Search")}
             </Button>

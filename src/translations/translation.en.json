@@ -10,12 +10,15 @@
   "Country": "Country",
   "Category": "Category",
   "Status": "Status",
-  "All": "All",
+  "All": "ALL",
+  "Select": "SELECT",
   "Search": "Search",
   "New": "New",
   "Modify": "Modify",
   "Delete": "Delete",
   "Name": "Name",
   "Address": "Address",
-  "Details": "Details"
+  "Details": "Details",
+  "Please select a country": "Please select a country",
+  "Please select a category": "Please select a category"
 }

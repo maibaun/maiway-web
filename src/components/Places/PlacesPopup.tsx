@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, createRef, useRef } from "react";
 import { connect } from "react-redux";
 import { makeStyles, Theme, createStyles } from "@material-ui/core/styles";
 import {
@@ -10,16 +10,20 @@ import {
   Grid,
   Typography,
   TextField,
-  Select,
-  MenuItem,
 } from "@material-ui/core";
 
 import { saveRequest, updateRequest } from "../../store/cudReducer";
 import { setUploadFile, resetUploadFile } from "../../store/fileUploadReducer";
 import { deleteMultiFile } from "../../store/fileDeleteReducer";
-import { CommonPopup, DraggableDialog, MapContainer2 } from "../commons";
+import {
+  CmmnSelect,
+  CommonPopup,
+  DraggableDialog,
+  MapContainer2,
+} from "../commons";
 import { FQGeoPoint, FQtimestampNow } from "../../fQuery";
 import { rootState } from "../../store";
+import { useTranslation } from "react-i18next";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -65,10 +69,6 @@ const useStyles = makeStyles((theme: Theme) =>
       justifyContent: "space-between",
       alignItems: "center",
     },
-    formControl: {
-      margin: theme.spacing(1),
-      // minWidth: 120,
-    },
     customCardContent: {
       padding: "16px 0",
     },
@@ -87,6 +87,7 @@ function PlacesPopup({
   commonList,
 }: any) {
   const classes = useStyles();
+  const { t } = useTranslation();
   const [inputs, setInputs] = useState({
     address: "",
     latitude: "",
@@ -129,11 +130,10 @@ function PlacesPopup({
     tc_descr,
   } = inputs;
 
-  const [country, setCountry] = useState("");
-  const [category, setCategory] = useState(0);
+  const [country, setCountry] = useState("Select");
+  const [category, setCategory] = useState<string | number>("Select");
   const [alertMsg, setAlertMsg] = useState("New");
   const [latLng, setLatLng] = useState<any>({ lat: "", lng: "" });
-
   useEffect(() => {
     if (open && selectedRow) {
       setAlertMsg("Update");
@@ -156,8 +156,8 @@ function PlacesPopup({
         cn_descr: selectedRow.cn_descr || "",
         tc_descr: selectedRow.tc_descr || "",
       });
-      setCountry(selectedRow.country_code || "");
-      setCategory(selectedRow.category || 0);
+      setCountry(selectedRow.country_code || "Select");
+      setCategory(selectedRow.category || "Select");
     }
     return () => {
       setInputs({
@@ -179,8 +179,8 @@ function PlacesPopup({
         cn_descr: "",
         tc_descr: "",
       });
-      setCountry("");
-      setCategory(0);
+      setCountry("Select");
+      setCategory("Select");
     };
   }, [open]);
 
@@ -262,10 +262,23 @@ function PlacesPopup({
     }
   };
 
+  const validationCheck = () => {
+    if (country === "Select") {
+      alert(t("Please select a country"));
+      return false;
+    } else if (category === "Select") {
+      alert(t("Please select a category"));
+      return false;
+    }
+    return true;
+  };
   /**
    * confirm 팝업 open
    */
   const handleClickOpenDialog = () => {
+    if (!validationCheck()) {
+      return false;
+    }
     setOpenDialog(true);
   };
   /**
@@ -353,44 +366,22 @@ function PlacesPopup({
             <Grid container spacing={2}>
               <Grid item xs={12}>
                 <Grid item xs={12} className={classes.gridCustom}>
-                  <Select
-                    labelId="demo-simple-select-outlined-label"
-                    id="category"
-                    label="Category"
-                    value={category}
-                    fullWidth
-                    onChange={handleCategoryChange}
-                    required
-                  >
-                    <MenuItem value="none" disabled>
-                      Category
-                    </MenuItem>
-                    {commonList &&
-                      commonList["category"].map((row: any) => (
-                        <MenuItem key={row.key} value={row.category_cd}>
-                          {row.category_nm}
-                        </MenuItem>
-                      ))}
-                  </Select>
-                  <Select
-                    labelId="demo-simple-select-outlined-label"
-                    id="country"
+                  <CmmnSelect
                     label="Country"
-                    value={country}
-                    fullWidth
+                    value={country || "Select"}
+                    firstItem="Select"
+                    itemList={commonList && commonList["country"]}
+                    keyValue={{ key: "Ctry_Code", value: "Ctry_Name" }}
                     onChange={handleCountryChange}
-                    required
-                  >
-                    <MenuItem value="none" disabled>
-                      Country
-                    </MenuItem>
-                    {commonList &&
-                      commonList["country"].map((row: any) => (
-                        <MenuItem key={row.key} value={row.Ctry_Code}>
-                          {row.Ctry_Name}
-                        </MenuItem>
-                      ))}
-                  </Select>
+                  />
+                  <CmmnSelect
+                    label="Category"
+                    value={category || "Select"}
+                    firstItem="Select"
+                    itemList={commonList && commonList["category"]}
+                    keyValue={{ key: "category_cd", value: "category_nm" }}
+                    onChange={handleCategoryChange}
+                  />
                 </Grid>
 
                 <TextField
@@ -440,7 +431,6 @@ function PlacesPopup({
                 </Grid>
                 <Grid item xs={12} className={classes.gridCustom}>
                   <TextField
-                    required
                     id="en_name"
                     name="en_name"
                     label="En_name"
@@ -449,7 +439,6 @@ function PlacesPopup({
                     onChange={onChange}
                   />
                   <TextField
-                    required
                     id="fr_name"
                     name="fr_name"
                     label="Fr_name"
@@ -458,7 +447,6 @@ function PlacesPopup({
                     onChange={onChange}
                   />
                   <TextField
-                    required
                     id="jp_name"
                     name="jp_name"
                     label="Jp_name"
@@ -469,7 +457,6 @@ function PlacesPopup({
                 </Grid>
                 <Grid item xs={12} className={classes.gridCustom}>
                   <TextField
-                    required
                     id="kr_name"
                     name="kr_name"
                     label="Kr_name"
@@ -478,7 +465,6 @@ function PlacesPopup({
                     onChange={onChange}
                   />
                   <TextField
-                    required
                     id="ph_name"
                     name="ph_name"
                     label="Ph_name"
@@ -487,7 +473,6 @@ function PlacesPopup({
                     onChange={onChange}
                   />
                   <TextField
-                    required
                     id="cn_name"
                     name="cn_name"
                     label="Cn_name"
@@ -498,7 +483,6 @@ function PlacesPopup({
                 </Grid>
                 <Grid item xs={12} className={classes.gridCustom}>
                   <TextField
-                    required
                     id="tc_name"
                     name="tc_name"
                     label="Tc_name"
