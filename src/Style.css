@@ -1,0 +1,66 @@
+@media only screen and (min-width: 360px) and (max-width: 640px) {  
+    /* .bodya { 
+      max-width: 100px;
+      align-items: center;
+      display: inline;
+    } */
+    .select{
+      width: 250px;
+    }
+    .fname{
+      max-width: 250px;
+    }
+    .fname{
+      max-width: 250px;
+    }
+    .lname{
+      max-width: 250px;
+    }
+    .dob{
+      max-width: 250px;
+    }
+    .address{
+      max-width: 250px;
+    }
+    .emailadd{
+      max-width: 250px;
+    }
+    .contact{
+      max-width: 250px;
+    }
+    .sub{
+      max-width: 250px;
+    }
+    .fem{
+      position: absolute;
+      left: 450px;
+      top: 0;
+    }
+    .comname{
+      max-width: 250px;
+    }
+    .pos{
+      max-width: 250px;
+    }
+    .coe{
+      max-width: 250px;
+    }
+    .orcr{
+      max-width: 250px;
+    }
+    .driver{
+      max-width: 250px;
+    }
+    .storename{
+      max-width: 250px;
+    }
+    .storeowner{
+      max-width: 250px;
+    }
+    .storeaddress{
+      max-width: 250px;
+    }
+    .buspermit{
+      max-width: 250px;
+    }
+  }
